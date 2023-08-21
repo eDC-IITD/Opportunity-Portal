@@ -2,19 +2,10 @@ import express from "express"
 const router = express.Router()
 import StartUp from '../../models/startUp/register.js';
 import { ObjectId } from 'mongodb';
+import { transport } from "../../packages/mailer/index.js";
 
 // OTP
 import otpGenerator from 'otp-generator';
-import nodemailer from 'nodemailer';
-import smtpTransport from 'nodemailer-smtp-transport';
-const transporter = nodemailer.createTransport(smtpTransport({
-    host: 'email-smtp.ap-south-1.amazonaws.com',
-    port: 465,
-    auth: {
-        user: 'AKIAZJ2NPFB7G5TKIDNR',
-        pass: 'BJcAh3Yfhc06dt1k18tNTIAYbWraXxnD9OYzjmEeAqYE'
-    }
-}));
 
 //Get
 router.get('/', async (req, res) => {
@@ -68,11 +59,11 @@ router.post('/', async (req, res) => {
                 status: 200,
                 startUpDetails: newStartUp
             })
-            var mailOptions = {
-                from: "opportunity.portal.edciitd@gmail.com",
+            let mailOptions = {
+                from: process.env.MAILER_ID,
                 to: newStartUp.email,
                 subject: "Your One-Time Password (OTP) for Sign Up Verification",
-                html: `
+                text: `
                     Dear ${newStartUp.companyName},<br><br>
                     Thank you for choosing to sign up with Opportunity Portal eDC IIT Delhi. To complete your registration and verify your account, we require you to enter a One-Time Password (OTP) which has been generated exclusively for you.<br><br>
                     Please enter the following OTP to complete the verification process: <b>${newStartUp.otp}</b><br><br>
@@ -82,8 +73,10 @@ router.post('/', async (req, res) => {
                     eDC IIT Delhi<br>
                `
             };
-            transporter.sendMail(mailOptions, function (error, info) {
+            console.log(mailOptions)
+            transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
+                    console.log("ofodsf")
                     console.log(error);
                 }
             });

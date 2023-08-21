@@ -2,20 +2,11 @@ import express from "express"
 const router = express.Router()
 import Student from '../../models/student/register.js';
 import { ObjectId } from 'mongodb';
-
+import { transport } from "../../packages/mailer/index.js";
 
 // OTP
 import otpGenerator from 'otp-generator';
-import nodemailer from 'nodemailer';
-import smtpTransport from 'nodemailer-smtp-transport';
-const transporter = nodemailer.createTransport(smtpTransport({
-    host: 'email-smtp.ap-south-1.amazonaws.com',
-    port: 465,
-    auth: {
-        user: 'AKIAZJ2NPFB7G5TKIDNR',
-        pass: 'BJcAh3Yfhc06dt1k18tNTIAYbWraXxnD9OYzjmEeAqYE'
-    }
-}));
+
 
 
 //Get
@@ -70,7 +61,7 @@ router.post('/', async (req, res) => {
                 studentDetails: newStudent
             })
             var mailOptions = {
-                from: "opportunity.portal.edciitd@gmail.com",
+                from: process.env.MAILER_ID,
                 to: newStudent.email,
                 subject: "Your One-Time Password (OTP) for Sign Up Verification",
                 html: `
@@ -83,7 +74,7 @@ router.post('/', async (req, res) => {
                     eDC IIT Delhi<br>
                `
             };
-            transporter.sendMail(mailOptions, function (error, info) {
+            transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);
                 }
