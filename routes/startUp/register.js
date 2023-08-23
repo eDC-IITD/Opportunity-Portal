@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
                 from: process.env.MAILER_ID,
                 to: newStartUp.email,
                 subject: "Your One-Time Password (OTP) for Sign Up Verification",
-                text: `
+                html: `
                     Dear ${newStartUp.companyName},<br><br>
                     Thank you for choosing to sign up with Opportunity Portal eDC IIT Delhi. To complete your registration and verify your account, we require you to enter a One-Time Password (OTP) which has been generated exclusively for you.<br><br>
                     Please enter the following OTP to complete the verification process: <b>${newStartUp.otp}</b><br><br>
