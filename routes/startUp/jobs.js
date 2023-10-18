@@ -8,7 +8,13 @@ import { ObjectId } from 'mongodb';
 //Get
 router.get('/', async (req, res) => {
     try {
-        const jobs = await Jobs.find({ $and: [{ startUpId: req.query.startUpId }, { type: req.query.type }] }).sort({"createdAt":-1,"deadline":1})
+        const jobs = await Jobs.find(
+            { 
+                $and: [
+                    { startUpId: req.query.startUpId }, 
+                    { type: req.query.type },
+        ]}).sort({"createdAt":-1,"deadline":1})
+
         res.status(200).json({
             status: 200,
             length: jobs.length,
@@ -58,6 +64,7 @@ router.post('/', async (req, res) => {
             selectionProcess: req.body.selectionProcess,
             startUpId: req.body.startUpId,
             createdAt: req.body.createdAt,
+            approval : "pending",
         })
         const newJob = await job.save()
 
@@ -135,6 +142,8 @@ router.put('/update/:jobId', async (req, res) => {
                     deadline: req.body.deadline,
                     selectionProcess: req.body.selectionProcess,
                     createdAt: req.body.createdAt,
+                    approval : "pending",
+
                 }
             },
             { 'new': true }

@@ -40,6 +40,9 @@ const jobsSchema = new mongoose.Schema({
     createdAt: {
         type: String,
     },
+    approval : {
+        type : String,
+    },
     studentsApplied: [
         {
             studentId: {
