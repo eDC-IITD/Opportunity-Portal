@@ -9,10 +9,10 @@ router.get('/', async (req, res) => {
     try {
         var jobs;
         if (req.query.type === undefined) {
-            jobs = await Jobs.find({ isActive: "true" }).sort({"createdAt":-1,"deadline":1})
+            jobs = await Jobs.find({$and : [{ isActive: "true"} , {approval : "approved"}]}).sort({"createdAt":-1,"deadline":1})
         }
         else {
-            jobs = await Jobs.find({ $and: [{ type: req.query.type }] }).sort({"createdAt":-1,"deadline":1})
+            jobs = await Jobs.find({ $and: [{ type: req.query.type }, {approval : "approved"}] }).sort({"createdAt":-1,"deadline":1})
         }
         res.status(200).json({
             status: 200,
