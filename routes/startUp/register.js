@@ -108,7 +108,9 @@ router.put('/:startUpId', async (req, res) => {
                 "linkedIn": req.body.linkedIn,
                 "sector": req.body.sector,
                 "website": req.body.website,
-                "tracxn": req.body.tracxn
+                "tracxn": req.body.tracxn,
+                "social": req.body.social,
+                "cruchbase": req.body.cruchbase
             }
         }, { 'new': true })
 

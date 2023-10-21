@@ -20,6 +20,12 @@ const startUpSchema = new mongoose.Schema({
     tracxn: {
         type: String
     },
+    social: {
+        type: String
+    },
+    cruchbase: {
+        type: String
+    },
     sector: {
         type: String
     },
