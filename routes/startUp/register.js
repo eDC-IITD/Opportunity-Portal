@@ -106,7 +106,9 @@ router.put('/:startUpId', async (req, res) => {
                 "founder": req.body.founder,
                 "noOfEmployees": req.body.noOfEmployees,
                 "linkedIn": req.body.linkedIn,
-                "sector": req.body.sector
+                "sector": req.body.sector,
+                "website": req.body.website,
+                "tracxn": req.body.tracxn
             }
         }, { 'new': true })
 
