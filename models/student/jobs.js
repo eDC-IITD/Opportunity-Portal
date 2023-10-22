@@ -22,6 +22,9 @@ const jobsSchema = new mongoose.Schema({
     skillsRequired: {
         type: String,
     },
+    jobLocation: {
+        type: String,
+    },
     responsibilities: {
         type: String,
     },
