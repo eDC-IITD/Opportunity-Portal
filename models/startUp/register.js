@@ -17,9 +17,9 @@ const startUpSchema = new mongoose.Schema({
     sector: {
         type: String
     },
-    location: {
-        type: String
-    },
+    // location: {
+    //     type: String
+    // },
     noOfEmployees: {
         type: String
     },
