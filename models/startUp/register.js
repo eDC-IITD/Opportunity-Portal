@@ -14,12 +14,24 @@ const startUpSchema = new mongoose.Schema({
     linkedIn: {
         type: String
     },
+    website: {
+        type: String
+    },
+    tracxn: {
+        type: String
+    },
+    social: {
+        type: String
+    },
+    cruchbase: {
+        type: String
+    },
     sector: {
         type: String
     },
-    location: {
-        type: String
-    },
+    // location: {
+    //     type: String
+    // },
     noOfEmployees: {
         type: String
     },
@@ -30,7 +42,9 @@ const startUpSchema = new mongoose.Schema({
         {
             id:{type:Number},
             name:{type:String},
-            bio:{type:String}
+            bio:{type:String},
+            linkedIn:{type:String},
+            website:{type:String},
         }
     ],
     jobs: [

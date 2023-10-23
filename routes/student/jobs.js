@@ -49,40 +49,49 @@ router.get('/:jobId', async (req, res) => {
 //PUT
 router.put('/:jobId', async (req, res) => {
     try {
-        const jobIdToSearch = new ObjectId(req.params.jobId);
-        const updatedjob = await Jobs.findByIdAndUpdate(jobIdToSearch, {
-            $push: {
-                "studentsApplied": {
-                    "studentId": req.user._id,
-                    "name": req.body.name,
-                    "email": req.body.email,
-                    "course":req.body.course,
-                    "department":req.body.department,
-                    "year":req.body.year,
-                    "cgpa":req.body.cgpa,
-                    "resumeLink": req.body.resumeLink,
-                    "linkedIn":req.body.linkedIn,
-                    "whyShouldWeHireYou":req.body.whyShouldWeHireYou,
-                    "status": req.body.status
-                }
-            }
-        }, { 'new': true })
-
         const studentIdToSearch = new ObjectId(req.user._id);
-        const updatedStudent = await Student.findByIdAndUpdate(studentIdToSearch, {
-            $push: {
-                "jobsApplied": {
-                    "jobId": req.params.jobId,
-                    "status": req.body.status
+        const student= await Student.findById(studentIdToSearch)
+        if(student.isVerified){
+            const jobIdToSearch = new ObjectId(req.params.jobId);
+            const updatedjob = await Jobs.findByIdAndUpdate(jobIdToSearch, {
+                $push: {
+                    "studentsApplied": {
+                        "studentId": req.user._id,
+                        "name": req.body.name,
+                        "email": req.body.email,
+                        "course":req.body.course,
+                        "department":req.body.department,
+                        "year":req.body.year,
+                        "cgpa":req.body.cgpa,
+                        "resumeLink": req.body.resumeLink,
+                        "linkedIn":req.body.linkedIn,
+                        "whyShouldWeHireYou":req.body.whyShouldWeHireYou,
+                        "status": req.body.status
+                    }
                 }
-            }
-        }, { 'new': true })
-
-        res.status(200).json({
-            status: 200,
-            studentDetails: updatedStudent,
-            jobDetails: updatedjob
-        })
+            }, { 'new': true })
+    
+            
+            const updatedStudent = await Student.findByIdAndUpdate(studentIdToSearch, {
+                $push: {
+                    "jobsApplied": {
+                        "jobId": req.params.jobId,
+                        "status": req.body.status
+                    }
+                }
+            }, { 'new': true })
+    
+            res.status(200).json({
+                status: 200,
+                studentDetails: updatedStudent,
+                jobDetails: updatedjob
+            })
+        }else{
+            res.status(401).json({
+                status:401,
+                message:"student is not verified yet"
+            })
+        }
 
     }
     catch (err) {
