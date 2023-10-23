@@ -4,9 +4,10 @@ import Jobs from '../../models/student/jobs.js';
 import StartUp from '../../models/startUp/register.js';
 import Student from '../../models/student/register.js';
 import { ObjectId } from 'mongodb';
+import { authenticationMiddleware } from '../../middleware/auth.js';
 
 //Get
-router.get('/', async (req, res) => {
+router.get('/',authenticationMiddleware, async (req, res) => {
     try {
         const jobs = await Jobs.find(
             { 
@@ -63,7 +64,7 @@ router.post('/', async (req, res) => {
             assignment: req.body.assignment,
             deadline:req.body.deadline,
             selectionProcess: req.body.selectionProcess,
-            startUpId: req.body.startUpId,
+            startUpId: req.user._id,
             createdAt: req.body.createdAt,
             approval : "pending",
         })

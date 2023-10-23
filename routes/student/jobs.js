@@ -49,15 +49,14 @@ router.get('/:jobId', async (req, res) => {
 //PUT
 router.put('/:jobId', async (req, res) => {
     try {
-        const studentIdToSearch = new ObjectId(req.body.studentId);
-        const stu= await Student.findById(studentIdToSearch)
-        if(stu.isVerified){
-
+        const studentIdToSearch = new ObjectId(req.user._id);
+        const student= await Student.findById(studentIdToSearch)
+        if(student.isVerified){
             const jobIdToSearch = new ObjectId(req.params.jobId);
             const updatedjob = await Jobs.findByIdAndUpdate(jobIdToSearch, {
                 $push: {
                     "studentsApplied": {
-                        "studentId": req.body.studentId,
+                        "studentId": req.user._id,
                         "name": req.body.name,
                         "email": req.body.email,
                         "course":req.body.course,

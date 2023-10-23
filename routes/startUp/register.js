@@ -76,7 +76,7 @@ router.post('/', async (req, res) => {
             console.log(mailOptions)
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
-                    console.log("ofodsf")
+                    
                     console.log(error);
                 }
             });
