@@ -2,6 +2,8 @@ import express from "express"
 const router = express.Router()
 import StartUp from '../../models/startUp/register.js';
 import { transport } from "../../packages/mailer/index.js";
+
+import jwt from 'jsonwebtoken';
 // OTP
 import otpGenerator from 'otp-generator';
 
@@ -60,9 +62,11 @@ router.post('/otp/verify', async (req, res) => {
     try {
         const startUpDetails = await StartUp.findOne({ email: req.body.email })
         if (startUpDetails.otp === req.body.otp) {
+            const token = jwt.sign({ _id: startUpDetails._id }, process.env.JWT_SECRET)
             res.status(200).json({
                 status: 200,
-                startUpDetails: startUpDetails
+                startUpDetails: startUpDetails,
+                token: token
             })
         }
         else {

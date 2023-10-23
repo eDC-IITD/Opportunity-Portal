@@ -53,7 +53,7 @@ router.put('/:jobId', async (req, res) => {
         const updatedjob = await Jobs.findByIdAndUpdate(jobIdToSearch, {
             $push: {
                 "studentsApplied": {
-                    "studentId": req.body.studentId,
+                    "studentId": req.user._id,
                     "name": req.body.name,
                     "email": req.body.email,
                     "course":req.body.course,
@@ -68,7 +68,7 @@ router.put('/:jobId', async (req, res) => {
             }
         }, { 'new': true })
 
-        const studentIdToSearch = new ObjectId(req.body.studentId);
+        const studentIdToSearch = new ObjectId(req.user._id);
         const updatedStudent = await Student.findByIdAndUpdate(studentIdToSearch, {
             $push: {
                 "jobsApplied": {

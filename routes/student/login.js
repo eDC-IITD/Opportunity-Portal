@@ -3,6 +3,8 @@ const router = express.Router()
 import Student from '../../models/student/register.js';
 import { transport } from "../../packages/mailer/index.js";
 
+import jwt from 'jsonwebtoken';
+
 // OTP
 import otpGenerator from 'otp-generator';
 
@@ -62,9 +64,11 @@ router.post('/otp/verify', async (req, res) => {
     try {
         const studentDetails = await Student.findOne({ email: req.body.email })
         if (studentDetails.otp === req.body.otp) {
+            const token = jwt.sign({ _id: studentDetails._id }, process.env.JWT_SECRET)
             res.status(200).json({
                 status: 200,
-                studentDetails: studentDetails
+                studentDetails: studentDetails,
+                token: token
             })
         }
         else {
