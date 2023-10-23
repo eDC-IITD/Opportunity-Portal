@@ -102,14 +102,18 @@ router.put('/:startUpId', async (req, res) => {
         const updatedStartUp = await StartUp.findByIdAndUpdate(req.params.startUpId, {
             $set: {
                 "companyVision": req.body.companyVision,
-                "location": req.body.location,
+                // "location": req.body.location,
                 "founder": req.body.founder,
                 "noOfEmployees": req.body.noOfEmployees,
                 "linkedIn": req.body.linkedIn,
                 "sector": req.body.sector,
                 "hrName": req.body.hrName,
                 "hrEmail": req.body.hrEmail,
-                "hrDesignation": req.body.hrDesignation
+                "hrDesignation": req.body.hrDesignation,
+                "website": req.body.website,
+                "tracxn": req.body.tracxn,
+                "social": req.body.social,
+                "cruchbase": req.body.cruchbase
             }
         }, { 'new': true })
 

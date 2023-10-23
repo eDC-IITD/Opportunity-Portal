@@ -29,6 +29,10 @@ const studentSchema = new mongoose.Schema({
     linkedIn: {
         type: String
     },
+    isVerified:{
+        type:Boolean,
+        default:false
+    },
     jobsApplied: [
         {
             jobId: {

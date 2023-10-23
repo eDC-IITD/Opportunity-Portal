@@ -62,9 +62,11 @@ router.post('/', async (req, res) => {
 //OTP Verify
 router.post('/otp/verify', async (req, res) => {
     try {
-        const studentDetails = await Student.findOne({ email: req.body.email })
+        let studentDetails = await Student.findOne({ email: req.body.email })
         if (studentDetails.otp === req.body.otp) {
             const token = jwt.sign({ _id: studentDetails._id }, process.env.JWT_SECRET)
+            studentDetails.isVerified=true
+            studentDetails=await studentDetails.save()
             res.status(200).json({
                 status: 200,
                 studentDetails: studentDetails,
