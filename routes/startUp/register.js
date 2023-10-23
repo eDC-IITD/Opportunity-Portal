@@ -106,7 +106,10 @@ router.put('/:startUpId', async (req, res) => {
                 "founder": req.body.founder,
                 "noOfEmployees": req.body.noOfEmployees,
                 "linkedIn": req.body.linkedIn,
-                "sector": req.body.sector
+                "sector": req.body.sector,
+                "hrName": req.body.hrName,
+                "hrEmail": req.body.hrEmail,
+                "hrDesignation": req.body.hrDesignation
             }
         }, { 'new': true })
 

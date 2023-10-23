@@ -39,7 +39,17 @@ const startUpSchema = new mongoose.Schema({
                 type: String
             }
         }
-    ]
+    ],
+    hrName: {
+        type: String
+    },
+    hrEmail: {
+        type: String
+    },
+    hrDesignation: {
+        type: String
+    }
+
 })
 
 export default mongoose.model('StartUp', startUpSchema)
