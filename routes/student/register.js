@@ -105,7 +105,8 @@ router.put('/:studentId', async (req, res) => {
                 "year": req.body.year,
                 "cgpa": req.body.cgpa,
                 "resumeLink": req.body.resumeLink,
-                "linkedIn": req.body.linkedIn
+                "linkedIn": req.body.linkedIn,
+                "isVerified": false,
             }
         }, { 'new': true })
 
