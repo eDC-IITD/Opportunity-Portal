@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
                     Dear ${newStudent.name},<br><br>
                     Thank you for choosing to sign up with Opportunity Portal eDC IIT Delhi. To complete your registration and verify your account, we require you to enter a One-Time Password (OTP) which has been generated exclusively for you.<br><br>
                     Please enter the following OTP to complete the verification process: <b>${newStudent.otp}</b><br><br>
-                    If you did not initiate this sign-up request, please disregard this email and notify our customer support team immediately at <u>opportunity.portal.edciitd@gmail.com</u><br><br>
+                    If you did not initiate this sign-up request, please disregard this email and notify our customer support team immediately at <u>opportunities.edciitd@gmail.com</u><br><br>
                     Thank you for choosing to sign up. We look forward to providing you with a seamless and enjoyable experience.<br><br>
                     Best regards,<br>
                     eDC IIT Delhi<br>
