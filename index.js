@@ -1,54 +1,52 @@
-import * as dotenv from 'dotenv'
-dotenv.config()
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-import express from 'express'
-const app = express()
+import express from 'express';
+const app = express();
 
-import mongoose from 'mongoose'
-
+import mongoose from 'mongoose';
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-const db = mongoose.connection
-db.on('error', (error) => console.log(error))
-db.once('open', () => console.log('Connected to Database'))
+const db = mongoose.connection;
+db.on('error', (error) => console.log(error));
+db.once('open', () => console.log('Connected to Database'));
 
-import cors from 'cors'
-app.use(cors())
-app.use(express.json())
+import cors from 'cors';
+app.use(cors());
+app.use(express.json());
 
 // app.get('/', (req, res) => {
-    //     res.send('Job Portal Backend')
-    // })
-    
-import { authenticationMiddleware } from './middleware/auth.js'
-    
-// Student side auth api
-import studentRegisterRouter from './routes/student/register.js'
-app.use('/api/student/register', studentRegisterRouter)
+//     res.send('Job Portal Backend')
+// })
 
-import studentLoginRouter from './routes/student/login.js'
-app.use('/api/student/login', studentLoginRouter)
+import { authenticationMiddleware } from './middleware/auth.js';
+
+// Student side auth api
+import studentRegisterRouter from './routes/student/register.js';
+app.use('/api/student/register', studentRegisterRouter);
+
+import studentLoginRouter from './routes/student/login.js';
+app.use('/api/student/login', studentLoginRouter);
 
 // StartUp side auth api
 
-import startUpRegisterRouter from './routes/startUp/register.js'
-app.use('/api/startUp/register', startUpRegisterRouter)
+import startUpRegisterRouter from './routes/startUp/register.js';
+app.use('/api/startUp/register', startUpRegisterRouter);
 
-import startUpLoginRouter from './routes/startUp/login.js'
+import startUpLoginRouter from './routes/startUp/login.js';
 app.use('/api/startUp/login', startUpLoginRouter);
 
 app.use(authenticationMiddleware);
 
 // Student side api
 
-import studentJobsRouter from './routes/student/jobs.js'
+import studentJobsRouter from './routes/student/jobs.js';
 app.use('/api/student/jobs', studentJobsRouter);
 
 // StartUp side api
 
-import startUpJobsRouter from './routes/startUp/jobs.js'
+import startUpJobsRouter from './routes/startUp/jobs.js';
 app.use('/api/startUp/jobs', startUpJobsRouter);
-
 
 // Sending Client Files
 
@@ -63,12 +61,11 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 // Handles any requests that don't match the ones above
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/index.html'));
+  res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
-
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`)
-})
+  console.log(`App listening on port ${port}`);
+});
