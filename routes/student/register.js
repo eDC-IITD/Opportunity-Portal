@@ -6,19 +6,18 @@ import { transport } from '../../packages/mailer/index.js';
 
 // OTP
 import otpGenerator from 'otp-generator';
+import { CONFIG } from '../../config.js';
 
 //Get
 router.get('/', async (req, res) => {
   try {
     const student = await Student.find();
     res.status(200).json({
-      status: 200,
       length: student.length,
       students: student,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -29,12 +28,10 @@ router.get('/:studentId', async (req, res) => {
     const idToSearch = new ObjectId(req.params.studentId);
     const studentDetails = await Student.findById(idToSearch);
     res.status(200).json({
-      status: 200,
       studentDetails: studentDetails,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -58,11 +55,10 @@ router.post('/', async (req, res) => {
       });
       const newStudent = await student.save();
       res.status(200).json({
-        status: 200,
         studentDetails: newStudent,
       });
-      var mailOptions = {
-        from: process.env.MAILER_ID,
+      let mailOptions = {
+        from: CONFIG.MAILER_ID,
         to: newStudent.email,
         subject: 'Your One-Time Password (OTP) for Sign Up Verification',
         html: `
@@ -82,13 +78,11 @@ router.post('/', async (req, res) => {
       });
     } else {
       res.status(401).json({
-        status: 401,
         message: 'Account already exist',
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -114,12 +108,10 @@ router.put('/:studentId', async (req, res) => {
     );
 
     res.status(200).json({
-      status: 200,
       studentDetails: updatedStudent,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }

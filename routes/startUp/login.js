@@ -6,16 +6,14 @@ import { transport } from '../../packages/mailer/index.js';
 import jwt from 'jsonwebtoken';
 // OTP
 import otpGenerator from 'otp-generator';
+import { CONFIG } from '../../config.js';
 
 //POST
 router.post('/', async (req, res) => {
   try {
     const startUpDetails = await StartUp.findOne({ email: req.body.email });
-    if (startUpDetails === null) {
-      res.status(401).json({
-        status: 401,
-        message: 'Account does not exist',
-      });
+    if (!startUpDetails) {
+      res.status(401).json({ message: 'Account does not exist' });
     } else {
       const otp = otpGenerator.generate(6, {
         digits: true,
@@ -31,13 +29,15 @@ router.post('/', async (req, res) => {
           },
         },
         { new: true },
-      );
+      ).lean();
       res.status(200).json({
-        status: 200,
         startUpDetails: findAndUpdateStartup,
       });
-      var mailOptions = {
-        from: process.env.MAILER_ID,
+
+      // TODO: Refactor all mailOptions into packages/mailer/mailOptions.js
+      // Create functions which input (to, name, otp), and return mailOptions object
+      let mailOptions = {
+        from: CONFIG.MAILER_ID,
         to: findAndUpdateStartup.email,
         subject: 'Your One-Time Password (OTP) for Sign In Verification',
         html: `
@@ -52,13 +52,12 @@ router.post('/', async (req, res) => {
       };
       transport.sendMail(mailOptions, function (error, info) {
         if (error) {
-          console.log(error);
+          console.error(error);
         }
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -69,21 +68,19 @@ router.post('/otp/verify', async (req, res) => {
   try {
     const startUpDetails = await StartUp.findOne({ email: req.body.email });
     if (startUpDetails.otp === req.body.otp) {
-      const token = jwt.sign({ _id: startUpDetails._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ _id: startUpDetails._id }, CONFIG.JWT_SECRET_KEY);
       res.status(200).json({
-        status: 200,
         startUpDetails: startUpDetails,
         token: token,
       });
+      // Delete the OTP from the db
     } else {
-      res.status(401).json({
-        status: 401,
+      res.status(403).json({
         message: 'Wrong OTP',
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }

@@ -6,19 +6,18 @@ import { transport } from '../../packages/mailer/index.js';
 
 // OTP
 import otpGenerator from 'otp-generator';
+import { CONFIG } from '../../config.js';
 
 //Get
 router.get('/', async (req, res) => {
   try {
     const startUp = await StartUp.find();
     res.status(200).json({
-      status: 200,
       length: startUp.length,
       startUps: startUp,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -30,12 +29,10 @@ router.get('/:startUpId', async (req, res) => {
     const idToSearch = new ObjectId(req.params.startUpId);
     const startUpDetails = await StartUp.findById(idToSearch);
     res.status(200).json({
-      status: 200,
       startUpDetails: startUpDetails,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -59,11 +56,10 @@ router.post('/', async (req, res) => {
       });
       const newStartUp = await startup.save();
       res.status(200).json({
-        status: 200,
         startUpDetails: newStartUp,
       });
       let mailOptions = {
-        from: process.env.MAILER_ID,
+        from: CONFIG.MAILER_ID,
         to: newStartUp.email,
         subject: 'Your One-Time Password (OTP) for Sign Up Verification',
         html: `
@@ -83,21 +79,19 @@ router.post('/', async (req, res) => {
         }
       });
     } else {
-      res.status(401).json({
-        status: 401,
+      res.status(403).json({
         message: 'Account already exist',
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
 });
 
 //PUT
-router.put('/:startUpId', async (req, res) => {
+router.patch('/:startUpId', async (req, res) => {
   try {
     const updatedStartUp = await StartUp.findByIdAndUpdate(
       req.params.startUpId,
@@ -122,12 +116,10 @@ router.put('/:startUpId', async (req, res) => {
     );
 
     res.status(200).json({
-      status: 200,
       startUpDetails: updatedStartUp,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }

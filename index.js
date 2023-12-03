@@ -1,12 +1,9 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 const app = express();
 
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(CONFIG.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', (error) => console.log(error));
 db.once('open', () => console.log('Connected to Database'));
@@ -52,6 +49,7 @@ app.use('/api/startUp/jobs', startUpJobsRouter);
 
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { CONFIG } from './config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,11 +58,12 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'client')));
 
 // Handles any requests that don't match the ones above
+// TODO Use NGINX routing for /api
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/index.html'));
 });
 
-const port = process.env.PORT || 3000;
+const port = CONFIG.PORT;
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);

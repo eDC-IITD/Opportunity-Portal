@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 
 // OTP
 import otpGenerator from 'otp-generator';
+import { CONFIG } from '../../config.js';
 
 //POST
 router.post('/', async (req, res) => {
@@ -14,7 +15,6 @@ router.post('/', async (req, res) => {
     const studentDetails = await Student.findOne({ email: req.body.email });
     if (studentDetails === null) {
       res.status(401).json({
-        status: 401,
         message: 'Account does not exist',
       });
     } else {
@@ -34,11 +34,10 @@ router.post('/', async (req, res) => {
         { new: true },
       );
       res.status(200).json({
-        status: 200,
         studentDetails: findAndUpdateStudent,
       });
-      var mailOptions = {
-        from: process.env.MAILER_ID,
+      let mailOptions = {
+        from: CONFIG.MAILER_ID,
         to: findAndUpdateStudent.email,
         subject: 'Your One-Time Password (OTP) for Sign In Verification',
         html: `
@@ -59,7 +58,6 @@ router.post('/', async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -70,23 +68,20 @@ router.post('/otp/verify', async (req, res) => {
   try {
     let studentDetails = await Student.findOne({ email: req.body.email });
     if (studentDetails.otp === req.body.otp) {
-      const token = jwt.sign({ _id: studentDetails._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ _id: studentDetails._id }, CONFIG.JWT_SECRET_KEY);
       studentDetails.isVerified = true;
       studentDetails = await studentDetails.save();
       res.status(200).json({
-        status: 200,
         studentDetails: studentDetails,
         token: token,
       });
     } else {
       res.status(401).json({
-        status: 401,
         message: 'Wrong OTP',
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }

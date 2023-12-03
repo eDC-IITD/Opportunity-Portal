@@ -7,7 +7,8 @@ import { ObjectId } from 'mongodb';
 //Get
 router.get('/', async (req, res) => {
   try {
-    var jobs;
+    // TODO: Improve logic, just find the query type and pass in single
+    let jobs;
     if (req.query.type === undefined) {
       jobs = await Jobs.find({ $and: [{ isActive: 'true' }, { approval: 'approved' }] }).sort({
         createdAt: -1,
@@ -19,14 +20,9 @@ router.get('/', async (req, res) => {
         deadline: 1,
       });
     }
-    res.status(200).json({
-      status: 200,
-      length: jobs.length,
-      jobs: jobs,
-    });
+    res.status(200).json(jobs);
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -38,12 +34,10 @@ router.get('/:jobId', async (req, res) => {
     const idToSearch = new ObjectId(req.params.jobId);
     const job = await Jobs.findById(idToSearch);
     res.status(200).json({
-      status: 200,
       jobDetails: job,
     });
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
@@ -92,19 +86,16 @@ router.put('/:jobId', async (req, res) => {
       );
 
       res.status(200).json({
-        status: 200,
         studentDetails: updatedStudent,
         jobDetails: updatedjob,
       });
     } else {
       res.status(401).json({
-        status: 401,
         message: 'student is not verified yet',
       });
     }
   } catch (err) {
     res.status(500).json({
-      status: 500,
       message: err.message,
     });
   }
