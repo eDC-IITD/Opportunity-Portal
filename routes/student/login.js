@@ -1,6 +1,7 @@
 import express from "express"
 const router = express.Router()
-import Student from '../../models/student/register.js';
+// import Student from '../../models/student/register.js';
+import {prisma} from "../../prisma/prisma.js";
 import { transport } from "../../packages/mailer/index.js";
 
 import jwt from 'jsonwebtoken';
@@ -11,7 +12,8 @@ import otpGenerator from 'otp-generator';
 //POST
 router.post('/', async (req, res) => {
     try {
-        const studentDetails = await Student.findOne({ email: req.body.email })
+        // const studentDetails = await Student.findOne({ email: req.body.email })
+        const studentDetails=await prisma.student.findUnique({where:{email:req.body.email}})
         if (studentDetails === null) {
             res.status(401).json({
                 status: 401,
@@ -20,11 +22,12 @@ router.post('/', async (req, res) => {
         }
         else {
             const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
-            const findAndUpdateStudent = await Student.findOneAndUpdate({ email: req.body.email }, {
-                $set: {
-                    otp: otp
-                }
-            }, { 'new': true })
+            // const findAndUpdateStudent = await Student.findOneAndUpdate({ email: req.body.email }, {
+            //     $set: {
+            //         otp: otp
+            //     }
+            // }, { 'new': true })
+            const findAndUpdateStudent=await prisma.student.update({where:{email:req.body.email},data:{otp:otp}})
             res.status(200).json({
                 status: 200,
                 studentDetails: findAndUpdateStudent
@@ -62,11 +65,13 @@ router.post('/', async (req, res) => {
 //OTP Verify
 router.post('/otp/verify', async (req, res) => {
     try {
-        let studentDetails = await Student.findOne({ email: req.body.email })
+        // let studentDetails = await Student.findOne({ email: req.body.email })
+        let studentDetails=await prisma.student.findUnique({where:{email:req.body.email}})
         if (studentDetails.otp === req.body.otp) {
             const token = jwt.sign({ _id: studentDetails._id }, process.env.JWT_SECRET)
-            studentDetails.isVerified=true
-            studentDetails=await studentDetails.save()
+            // studentDetails.isVerified=true
+            // studentDetails=await studentDetails.save()
+            studentDetails=await prisma.student.update({where:{email:req.body.email},data:{isVerified:true}})
             res.status(200).json({
                 status: 200,
                 studentDetails: studentDetails,

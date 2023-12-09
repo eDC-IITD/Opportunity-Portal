@@ -1,6 +1,7 @@
 import express from "express"
 const router = express.Router()
-import StartUp from '../../models/startUp/register.js';
+// import StartUp from '../../models/startUp/register.js';
+import {prisma} from "../../prisma/prisma.js";
 import { transport } from "../../packages/mailer/index.js";
 
 import jwt from 'jsonwebtoken';
@@ -10,7 +11,8 @@ import otpGenerator from 'otp-generator';
 //POST
 router.post('/', async (req, res) => {
     try {
-        const startUpDetails = await StartUp.findOne({ email: req.body.email })
+        // const startUpDetails = await StartUp.findOne({ email: req.body.email })
+        const startUpDetails=await prisma.startup.findUnique({where:{email:req.body.email}})
         if (startUpDetails === null) {
             res.status(401).json({
                 status: 401,
@@ -19,11 +21,12 @@ router.post('/', async (req, res) => {
         }
         else {
             const otp = otpGenerator.generate(6, { digits:true,lowerCaseAlphabets:false, upperCaseAlphabets: false, specialChars: false });
-            const findAndUpdateStartup=await StartUp.findOneAndUpdate({email:req.body.email},{
-                $set:{
-                    otp: otp
-                }
-            },{ 'new': true })
+            // const findAndUpdateStartup=await StartUp.findOneAndUpdate({email:req.body.email},{
+            //     $set:{
+            //         otp: otp
+            //     }
+            // },{ 'new': true })
+            const findAndUpdateStartup=await prisma.startup.update({where:{email:req.body.email},data:{otp:otp}})
             res.status(200).json({
                 status: 200,
                 startUpDetails: findAndUpdateStartup
@@ -60,7 +63,8 @@ router.post('/', async (req, res) => {
 //OTP Verify
 router.post('/otp/verify', async (req, res) => {
     try {
-        const startUpDetails = await StartUp.findOne({ email: req.body.email })
+        // const startUpDetails = await StartUp.findOne({ email: req.body.email })
+        const startUpDetails=await prisma.startup.findUnique({where:{email:req.body.email}})
         if (startUpDetails.otp === req.body.otp) {
             const token = jwt.sign({ _id: startUpDetails._id }, process.env.JWT_SECRET)
             res.status(200).json({
