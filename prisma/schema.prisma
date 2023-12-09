@@ -11,13 +11,14 @@ datasource db {
 }
 
 model founder{
-  id Int @id @default(autoincrement())
+  id Int
   name String?
   bio String?
   linkedIn String?
   website String?
   startupId String
   startup startup @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@id([id, startupId])
 }
 
 model startup{
@@ -71,6 +72,7 @@ model studentApplication{
   job job @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   status String?
   whyShouldWeHireYou String?  
+  @@unique([jobId, studentId])
 }
 
 model student{

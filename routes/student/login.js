@@ -28,6 +28,7 @@ router.post('/', async (req, res) => {
             //     }
             // }, { 'new': true })
             const findAndUpdateStudent=await prisma.student.update({where:{email:req.body.email},data:{otp:otp}})
+            delete findAndUpdateStudent.otp
             res.status(200).json({
                 status: 200,
                 studentDetails: findAndUpdateStudent

@@ -1,20 +1,20 @@
 -- CreateTable
 CREATE TABLE "founder" (
-    "id" SERIAL NOT NULL,
+    "id" INTEGER NOT NULL,
     "name" TEXT,
     "bio" TEXT,
     "linkedIn" TEXT,
     "website" TEXT,
     "startupId" TEXT NOT NULL,
 
-    CONSTRAINT "founder_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "founder_pkey" PRIMARY KEY ("id","startupId")
 );
 
 -- CreateTable
 CREATE TABLE "startup" (
     "id" TEXT NOT NULL,
     "companyName" TEXT,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "otp" TEXT,
     "linkedIn" TEXT,
     "website" TEXT,
@@ -38,7 +38,7 @@ CREATE TABLE "job" (
     "startupId" TEXT NOT NULL,
     "designation" TEXT,
     "type" TEXT,
-    "duratio" TEXT,
+    "duration" TEXT,
     "stipend" TEXT,
     "noOfOffers" TEXT,
     "skillsRequired" TEXT,
@@ -82,8 +82,20 @@ CREATE TABLE "student" (
     CONSTRAINT "student_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "admin" (
+    "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+
+    CONSTRAINT "admin_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "startup_id_key" ON "startup"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "startup_email_key" ON "startup"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "job_id_key" ON "job"("id");
@@ -92,10 +104,19 @@ CREATE UNIQUE INDEX "job_id_key" ON "job"("id");
 CREATE UNIQUE INDEX "studentApplication_id_key" ON "studentApplication"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "studentApplication_jobId_studentId_key" ON "studentApplication"("jobId", "studentId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "student_id_key" ON "student"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "student_email_key" ON "student"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "admin_id_key" ON "admin"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "admin_username_key" ON "admin"("username");
 
 -- AddForeignKey
 ALTER TABLE "founder" ADD CONSTRAINT "founder_startupId_fkey" FOREIGN KEY ("startupId") REFERENCES "startup"("id") ON DELETE CASCADE ON UPDATE CASCADE;

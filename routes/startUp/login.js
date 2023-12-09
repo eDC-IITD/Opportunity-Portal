@@ -27,6 +27,7 @@ router.post('/', async (req, res) => {
             //     }
             // },{ 'new': true })
             const findAndUpdateStartup=await prisma.startup.update({where:{email:req.body.email},data:{otp:otp}})
+            delete findAndUpdateStartup.otp
             res.status(200).json({
                 status: 200,
                 startUpDetails: findAndUpdateStartup
@@ -64,7 +65,7 @@ router.post('/', async (req, res) => {
 router.post('/otp/verify', async (req, res) => {
     try {
         // const startUpDetails = await StartUp.findOne({ email: req.body.email })
-        const startUpDetails=await prisma.startup.findUnique({where:{email:req.body.email}})
+        const startUpDetails=await prisma.startup.findUnique({where:{email:req.body.email},include:{founder:true}})
         if (startUpDetails.otp === req.body.otp) {
             const token = jwt.sign({ _id: startUpDetails._id }, process.env.JWT_SECRET)
             res.status(200).json({

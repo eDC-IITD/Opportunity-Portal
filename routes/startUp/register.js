@@ -59,7 +59,9 @@ router.post('/', async (req, res) => {
             //     otp: otp
             // })
             // const newStartUp = await startup.save()
-            const newStartUp=await prisma.startup.create({data:{companyName:req.body.companyName,email:req.body.email,otp:otp}})
+            let newStartUp=await prisma.startup.create({data:{companyName:req.body.companyName,email:req.body.email,otp:otp}})
+            delete newStartUp.otp
+            console.log(newStartUp)
             res.status(200).json({
                 status: 200,
                 startUpDetails: newStartUp
@@ -121,14 +123,37 @@ router.put('/:startUpId', async (req, res) => {
         //         "cruchbase": req.body.cruchbase
         //     }
         // }, { 'new': true })
-        const updatedStartUp=await prisma.startup.update({where:{id:req.params.startUpId},data:{companyVision:req.body.companyVision,noOfEmployees:req.body.noOfEmployees,linkedIn:req.body.linkedIn,sector:req.body.sector,hrName:req.body.hrName,hrEmail:req.body.hrEmail,hrDesignation:req.body.hrDesignation,website:req.body.website,tracxn:req.body.tracxn,social:req.body.social,cruchbase:req.body.cruchbase}})
-        console.log(req.body.founder)
-        console.log(req.body)
+        await prisma.startup.update({where:{id:req.params.startUpId},data:{companyVision:req.body.companyVision,noOfEmployees:req.body.noOfEmployees,linkedIn:req.body.linkedIn,sector:req.body.sector,hrName:req.body.hrName,hrEmail:req.body.hrEmail,hrDesignation:req.body.hrDesignation,website:req.body.website,tracxn:req.body.tracxn,social:req.body.social,cruchbase:req.body.cruchbase}})
         for(let x of req.body.founder){
-            console.log(x)
-            await prisma.founder.upsert({where:{id:x.id},update:{name:x.name,email:x.email,designation:x.designation,linkedIn:x.linkedIn},create:{name:x.name,email:x.email,designation:x.designation,linkedIn:x.linkedIn,startup:{connect:{id:req.params.startUpId}}}})
+            // console.log(x)
+            await prisma.founder.upsert({
+                where: {
+                    id_startupId: {
+                        id: x.id,
+                        startupId: req.params.startUpId,
+                    },
+                },
+                update: {
+                    name: x.name,
+                    email: x.email,
+                    designation: x.designation,
+                    linkedIn: x.linkedIn,
+                },
+                create: {
+                    id: x.id,
+                    name: x.name,
+                    email: x.email,
+                    designation: x.designation,
+                    linkedIn: x.linkedIn,
+                    startup: {
+                        connect: {
+                            id: req.params.startUpId,
+                        },
+                    },
+                },
+            });
         }
-
+        const updatedStartUp=await prisma.startup.findUnique({where:{id:req.params.startUpId},include:{founder:true}})
         res.status(200).json({
             status: 200,
             startUpDetails: updatedStartUp
