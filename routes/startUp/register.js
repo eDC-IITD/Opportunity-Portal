@@ -60,7 +60,6 @@ router.post('/', async (req, res) => {
             // })
             // const newStartUp = await startup.save()
             let newStartUp=await prisma.startup.create({data:{companyName:req.body.companyName,email:req.body.email,otp:otp}})
-            delete newStartUp.otp
             console.log(newStartUp)
             res.status(200).json({
                 status: 200,
@@ -80,6 +79,7 @@ router.post('/', async (req, res) => {
                     eDC IIT Delhi<br>
                `
             };
+            delete newStartUp.otp
             console.log(mailOptions)
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {

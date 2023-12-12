@@ -25,6 +25,7 @@
     "otp-generator": "^4.0.1"
   },
   "devDependencies": {
+    "eslint": "^8.55.0",
     "prisma": "^5.7.0"
   }
 }
