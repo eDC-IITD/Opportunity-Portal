@@ -102,7 +102,8 @@ router.put('/:jobId', async (req, res) => {
                 data:{
                     jobId:req.params.jobId,
                     studentId:req.body.studentId,
-                    status:req.body.status
+                    status:req.body.status,
+                    whyShouldWeHireYou:req.body.whyShouldWeHireYou
                 }
             })
             const updatedStudent=await prisma.student.findUnique({where:{id:req.body.studentId}})
