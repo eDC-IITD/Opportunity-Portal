@@ -26,8 +26,8 @@ router.post('/', async (req, res) => {
             //         otp: otp
             //     }
             // },{ 'new': true })
+            console.info(otp)
             const findAndUpdateStartup=await prisma.startup.update({where:{email:req.body.email},data:{otp:otp}})
-            delete findAndUpdateStartup.otp
             res.status(200).json({
                 status: 200,
                 startUpDetails: findAndUpdateStartup
@@ -46,6 +46,7 @@ router.post('/', async (req, res) => {
                     eDC IIT Delhi<br>
                `
             };
+            delete findAndUpdateStartup.otp
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);

@@ -60,7 +60,6 @@ router.post('/', async (req, res) => {
             // })
             // const newStudent = await student.save()
             const newStudent=await prisma.student.create({data:{name:req.body.name,email:req.body.email,otp:otp,isVerified:false}})
-            delete newStudent.otp
             res.status(200).json({
                 status: 200,
                 studentDetails: newStudent
@@ -79,6 +78,7 @@ router.post('/', async (req, res) => {
                     eDC IIT Delhi<br>
                `
             };
+            delete newStudent.otp
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);
