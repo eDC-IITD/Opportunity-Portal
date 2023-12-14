@@ -28,6 +28,7 @@ router.post('/', async (req, res) => {
             // },{ 'new': true })
             console.info(otp)
             const findAndUpdateStartup=await prisma.startup.update({where:{email:req.body.email},data:{otp:otp}})
+            delete findAndUpdateStartup.otp
             res.status(200).json({
                 status: 200,
                 startUpDetails: findAndUpdateStartup
@@ -39,14 +40,13 @@ router.post('/', async (req, res) => {
                 html: `
                     Dear ${findAndUpdateStartup.companyName},<br><br>
                     To complete your sign in process, we require you to enter a One-Time Password (OTP) which has been generated exclusively for you.<br><br>
-                    Please enter the following OTP to complete the sign in process: <b>${findAndUpdateStartup.otp}</b><br><br>
+                    Please enter the following OTP to complete the sign in process: <b>${otp}</b><br><br>
                     If you did not initiate this sign-in request, please disregard this email and notify our customer support team immediately at <u>opportunities.edciitd@gmail.com</u><br><br>
                     Thank you for choosing to sign in. We look forward to providing you with a seamless and enjoyable experience.<br><br>
                     Best regards,<br>
                     eDC IIT Delhi<br>
                `
             };
-            delete findAndUpdateStartup.otp
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);

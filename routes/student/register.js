@@ -60,6 +60,7 @@ router.post('/', async (req, res) => {
             // })
             // const newStudent = await student.save()
             const newStudent=await prisma.student.create({data:{name:req.body.name,email:req.body.email,otp:otp,isVerified:false}})
+            delete newStudent.otp
             res.status(200).json({
                 status: 200,
                 studentDetails: newStudent
@@ -71,14 +72,13 @@ router.post('/', async (req, res) => {
                 html: `
                     Dear ${newStudent.name},<br><br>
                     Thank you for choosing to sign up with Opportunity Portal eDC IIT Delhi. To complete your registration and verify your account, we require you to enter a One-Time Password (OTP) which has been generated exclusively for you.<br><br>
-                    Please enter the following OTP to complete the verification process: <b>${newStudent.otp}</b><br><br>
+                    Please enter the following OTP to complete the verification process: <b>${otp}</b><br><br>
                     If you did not initiate this sign-up request, please disregard this email and notify our customer support team immediately at <u>opportunities.edciitd@gmail.com</u><br><br>
                     Thank you for choosing to sign up. We look forward to providing you with a seamless and enjoyable experience.<br><br>
                     Best regards,<br>
                     eDC IIT Delhi<br>
                `
             };
-            delete newStudent.otp
             transport.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     console.log(error);
