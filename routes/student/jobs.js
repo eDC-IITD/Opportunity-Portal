@@ -69,7 +69,13 @@ router.put('/:jobId', async (req, res) => {
         // const studentIdToSearch = new ObjectId(req.user._id);
         // const student= await Student.findById(studentIdToSearch)
         const student=await prisma.student.findUnique({where:{id:req.body.studentId}})
-        if(student.isVerified){
+        if(!student.course||!student.department||!student.year||!student.cgpa||!student.resumeLink){
+            res.status(401).json({
+                status:401,
+                message:"please complete your profile"
+            })
+        }
+        else if(student.isVerified){
             // const jobIdToSearch = new ObjectId(req.params.jobId);
             // const updatedjob = await Jobs.findByIdAndUpdate(jobIdToSearch, {
             //     $push: {

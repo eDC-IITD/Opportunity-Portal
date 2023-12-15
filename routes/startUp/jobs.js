@@ -80,6 +80,14 @@ router.post('/', async (req, res) => {
         //     approval : "pending",
         // })
         // const newJob = await job.save()
+        const startUp=await prisma.startup.findUnique({where:{id:req.body.startUpId}});
+        console.log(startUp)
+        if(!startUp||!startUp.sector||!startUp.noOfEmployees||!startUp.companyVision){
+            return res.status(400).json({
+                status:400,
+                message:"Please complete your profile first"
+            })
+        }
         const newJob=await prisma.job.create({data:{
             companyName: req.body.companyName,
             designation: req.body.designation,
