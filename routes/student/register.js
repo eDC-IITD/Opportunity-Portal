@@ -103,18 +103,18 @@ router.post('/', async (req, res) => {
 //PUT
 router.put('/:studentId', async (req, res) => {
     try {
-        // const updatedStudent = await Student.findByIdAndUpdate(req.params.studentId, {
-        //     $set: {
-        //         "course": req.body.course,
-        //         "department": req.body.department,
-        //         "year": req.body.year,
-        //         "cgpa": req.body.cgpa,
-        //         "resumeLink": req.body.resumeLink,
-        //         "linkedIn": req.body.linkedIn,
-        //         "isVerified": false,
-        //     }
-        // }, { 'new': true })
-        const updatedStudent=await prisma.student.update({where:{id:req.params.studentId},data:{course:req.body.course,department:req.body.department,year:req.body.year,cgpa:req.body.cgpa,resumeLink:req.body.resumeLink,linkedIn:req.body.linkedIn,isVerified:false}})
+        const student=await prisma.student.findUnique({where:{id:req.params.studentId}})
+        var notificationStatus=""
+        if(req.body.notificationStatus===true&&(student.notificationStatus==="notreceive"||student.notificationStatus==="updnotreceive")){
+            notificationStatus="updreceive"
+        }
+        else if(req.body.notificationStatus===false&&(student.notificationStatus==="receive"||student.notificationStatus==="updreceive")){
+            notificationStatus="updnotreceive"
+        }
+        else{
+            notificationStatus=student.notificationStatus
+        }
+        const updatedStudent=await prisma.student.update({where:{id:req.params.studentId},data:{course:req.body.course,department:req.body.department,year:req.body.year,cgpa:req.body.cgpa,resumeLink:req.body.resumeLink,linkedIn:req.body.linkedIn,isVerified:false,notificationStatus:notificationStatus}})
         res.status(200).json({
             status: 200,
             studentDetails: updatedStudent

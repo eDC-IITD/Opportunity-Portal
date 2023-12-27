@@ -42,6 +42,13 @@ model startup{
 
 }
 
+enum NotifiedStatus {
+  notified
+  rejected
+  tobedecided
+  tobenotified
+}
+
 model job{
   id String @unique @default(uuid()) @id
   companyName String?
@@ -62,6 +69,7 @@ model job{
   createdAt String?
   approval  String?
   studentsApplied studentApplication[]
+  notifiedStatus NotifiedStatus @default(tobedecided)
 }
 
 model studentApplication{
@@ -73,6 +81,13 @@ model studentApplication{
   status String @default("Applied")
   whyShouldWeHireYou String?  
   @@unique([jobId, studentId])
+}
+
+enum NotificationStatus {
+  receive
+  notreceive
+  updreceive
+  updnotreceive
 }
 
 model student{
@@ -87,7 +102,8 @@ model student{
   resumeLink   String?
   linkedIn   String?
   isVerified Boolean @default(false)
-  jobsApplied studentApplication[] 
+  jobsApplied studentApplication[]
+  notificationStatus NotificationStatus @default(notreceive)
 }
 
 model admin{
