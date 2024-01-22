@@ -51,20 +51,24 @@ app.use('/api/startUp/jobs', startUpJobsRouter);
 
 
 // Sending Client Files
+// DO NO REMOVE BELOW TWO LINES, THEY ARE FOR FUTURE USE
+// The below commented line is for the case if we want to directly serve the frontend as client files here itself
 
-import path from 'path';
-import { fileURLToPath } from 'url';
+// import path from 'path';
+// import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
-// Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'client')));
+// // Serve the static files from the React app
+// app.use(express.static(path.join(__dirname, 'client')));
 
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/client/index.html'));
-});
+// // Handles any requests that don't match the ones above
+// app.get('*', (req, res) => {
+//     // res.sendFile(path.join(__dirname + '/client/index.html')); 
+//     res.status(404).send("not found");
+// });
+
 
 
 const port = process.env.PORT || 3000
