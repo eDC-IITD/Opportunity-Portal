@@ -6,93 +6,95 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL_POSTGRESQL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_POSTGRESQL")
+  directUrl = env("DIRECT_URL_POSTGRESQL")
 }
 
-model founder{
-  id Int
-  name String?
-  bio String?
-  linkedIn String?
-  website String?
+model founder {
+  id        Int
+  name      String?
+  bio       String?
+  linkedIn  String?
+  website   String?
   startupId String
-  startup startup @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
   @@id([id, startupId])
 }
 
-model startup{
-  id String @default(uuid()) @unique @id
-  companyName String?
-  email String @unique
-  otp  String?
-  linkedIn  String?
-  website String?
-  tracxn  String?
-  social  String?
-  cruchbase String?
-  sector  String?
+model startup {
+  id            String    @id @unique @default(uuid())
+  companyName   String?
+  email         String    @unique
+  otp           String?
+  linkedIn      String?
+  website       String?
+  tracxn        String?
+  social        String?
+  cruchbase     String?
+  sector        String?
   noOfEmployees String?
   companyVision String?
-  founder founder[]
-  jobs  job[]
-  hrName  String?
-  hrEmail String?
+  founder       founder[]
+  jobs          job[]
+  hrName        String?
+  hrEmail       String?
   hrDesignation String?
   iitdStartup  Boolean @default(false)
-
 }
 
-model job{
-  id String @unique @default(uuid()) @id
-  companyName String?
-  startupId String
-  startup startup @relation(fields:[startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  designation String?
-  type  String?
-  duration String?
-  stipend String?
-  noOfOffers  String?
-  skillsRequired  String?
-  jobLocation String?
-  responsibilities  String?
-  assignment  String?
-  deadline  String?
-  selectionProcess  String?
-  startUpId String?
-  createdAt String?
-  approval  String?
-  studentsApplied studentApplication[]
+model job {
+  id               String               @id @unique @default(uuid())
+  companyName      String?
+  startupId        String
+  startup          startup              @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  designation      String?
+  type             String?
+  duration         String?
+  stipend          String?
+  noOfOffers       String?
+  skillsRequired   String?
+  jobLocation      String?
+  responsibilities String?
+  assignment       String?
+  deadline         String?
+  selectionProcess String?
+  startUpId        String?
+  createdAt        String?
+  approval         String?
+  studentsApplied  studentApplication[]
 }
 
-model studentApplication{
-  id String @unique @default(uuid()) @id
-  student student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  studentId String 
-  jobId String
-  job job @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  status String @default("Applied")
-  whyShouldWeHireYou String?  
+model studentApplication {
+  id                 String  @id @unique @default(uuid())
+  student            student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  studentId          String
+  jobId              String
+  job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status             String  @default("Applied")
+  whyShouldWeHireYou String?
+
   @@unique([jobId, studentId])
 }
 
-model student{
-  id String @unique @default(uuid()) @id
-  name String?
-  email String @unique
-  otp  String?
-  course String?
-  department String?
-  year String?
-  cgpa String?
-  resumeLink   String?
-  linkedIn   String?
-  isVerified Boolean @default(false)
-  jobsApplied studentApplication[] 
+model student {
+  id          String               @id @unique @default(uuid())
+  name        String?
+  email       String               @unique
+  otp         String?
+  course      String?
+  department  String?
+  year        String?
+  cgpa        String?
+  resumeLink  String?
+  linkedIn    String?
+  isVerified  Boolean              @default(false)
+  jobsApplied studentApplication[]
 }
 
-model admin{
-  id String @unique @default(uuid()) @id
+model admin {
+  id       String @id @unique @default(uuid())
   username String @unique
   password String
 }

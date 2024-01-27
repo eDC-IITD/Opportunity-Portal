@@ -2,7 +2,6 @@ import express from "express"
 const router = express.Router()
 // import StartUp from '../../models/startUp/register.js';
 import {prisma} from "../../prisma/prisma.js";
-import { ObjectId } from 'mongodb';
 import { transport } from "../../packages/mailer/index.js";
 
 // OTP
@@ -80,7 +79,7 @@ router.post('/', async (req, res) => {
                `
             };
             console.log(mailOptions)
-            transport.sendMail(mailOptions, function (error, info) {
+            transport.sendMail(mailOptions, function (error) {
                 if (error) {
                     
                     console.log(error);
