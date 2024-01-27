@@ -105,24 +105,7 @@ router.post('/', async (req, res) => {
 //PUT
 router.put('/:startUpId', async (req, res) => {
     try {
-        // const updatedStartUp = await StartUp.findByIdAndUpdate(req.params.startUpId, {
-        //     $set: {
-        //         "companyVision": req.body.companyVision,
-        //         // "location": req.body.location,
-        //         "founder": req.body.founder,
-        //         "noOfEmployees": req.body.noOfEmployees,
-        //         "linkedIn": req.body.linkedIn,
-        //         "sector": req.body.sector,
-        //         "hrName": req.body.hrName,
-        //         "hrEmail": req.body.hrEmail,
-        //         "hrDesignation": req.body.hrDesignation,
-        //         "website": req.body.website,
-        //         "tracxn": req.body.tracxn,
-        //         "social": req.body.social,
-        //         "cruchbase": req.body.cruchbase
-        //     }
-        // }, { 'new': true })
-        await prisma.startup.update({where:{id:req.params.startUpId},data:{companyVision:req.body.companyVision,noOfEmployees:req.body.noOfEmployees,linkedIn:req.body.linkedIn,sector:req.body.sector,hrName:req.body.hrName,hrEmail:req.body.hrEmail,hrDesignation:req.body.hrDesignation,website:req.body.website,tracxn:req.body.tracxn,social:req.body.social,cruchbase:req.body.cruchbase}})
+        await prisma.startup.update({where:{id:req.params.startUpId},data:{companyVision:req.body.companyVision,noOfEmployees:req.body.noOfEmployees,linkedIn:req.body.linkedIn,sector:req.body.sector,hrName:req.body.hrName,hrEmail:req.body.hrEmail,hrDesignation:req.body.hrDesignation,website:req.body.website,tracxn:req.body.tracxn,social:req.body.social,cruchbase:req.body.cruchbase,iitdStartup:req.body.iitdStartup}})
         for(let x of req.body.founder){
             // console.log(x)
             await prisma.founder.upsert({
