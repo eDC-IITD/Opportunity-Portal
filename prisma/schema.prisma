@@ -41,6 +41,7 @@ model startup {
   hrName        String?
   hrEmail       String?
   hrDesignation String?
+  iitdStartup  Boolean @default(false)
 }
 
 model job {
