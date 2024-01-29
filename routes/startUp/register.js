@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 // import StartUp from '../../models/startUp/register.js';
-import {prisma} from "../../prisma/prisma.js";
+import { prisma } from "../../prisma/prisma.js";
 import { transport } from "../../packages/mailer/index.js";
 
 // OTP
@@ -11,7 +11,7 @@ import otpGenerator from 'otp-generator';
 router.get('/', async (req, res) => {
     try {
         // const startUp = await StartUp.find()
-        const startUp=await prisma.startup.findMany()
+        const startUp = await prisma.startup.findMany()
         res.status(200).json({
             status: 200,
             length: startUp.length,
@@ -31,7 +31,7 @@ router.get('/:startUpId', async (req, res) => {
     try {
         // const idToSearch = new ObjectId(req.params.startUpId);
         // const startUpDetails = await StartUp.findById(idToSearch);
-        const startUpDetails=await prisma.startup.findUnique({where:{id:req.params.startUpId},include:{founder:true}})
+        const startUpDetails = await prisma.startup.findUnique({ where: { id: req.params.startUpId }, include: { founder: true } })
         res.status(200).json({
             status: 200,
             startUpDetails: startUpDetails
@@ -49,7 +49,7 @@ router.get('/:startUpId', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         // const checkUserAlreadyExist = await StartUp.findOne({ email: req.body.email })
-        const checkUserAlreadyExist=await prisma.startup.findUnique({where:{email:req.body.email}})
+        const checkUserAlreadyExist = await prisma.startup.findUnique({ where: { email: req.body.email } })
         if (checkUserAlreadyExist === null) {
             const otp = otpGenerator.generate(6, { digits: true, lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
             // const startup = new StartUp({
@@ -58,7 +58,7 @@ router.post('/', async (req, res) => {
             //     otp: otp
             // })
             // const newStartUp = await startup.save()
-            let newStartUp=await prisma.startup.create({data:{companyName:req.body.companyName,email:req.body.email,otp:otp}})
+            let newStartUp = await prisma.startup.create({ data: { companyName: req.body.companyName, email: req.body.email, otp: otp } })
             delete newStartUp.otp
             res.status(200).json({
                 status: 200,
@@ -81,7 +81,7 @@ router.post('/', async (req, res) => {
             console.log(mailOptions)
             transport.sendMail(mailOptions, function (error) {
                 if (error) {
-                    
+
                     console.log(error);
                 }
             });
@@ -104,8 +104,8 @@ router.post('/', async (req, res) => {
 //PUT
 router.put('/:startUpId', async (req, res) => {
     try {
-        await prisma.startup.update({where:{id:req.params.startUpId},data:{companyVision:req.body.companyVision,noOfEmployees:req.body.noOfEmployees,linkedIn:req.body.linkedIn,sector:req.body.sector,hrName:req.body.hrName,hrEmail:req.body.hrEmail,hrDesignation:req.body.hrDesignation,website:req.body.website,tracxn:req.body.tracxn,social:req.body.social,cruchbase:req.body.cruchbase,iitdStartup:req.body.iitdStartup}})
-        for(let x of req.body.founder){
+        await prisma.startup.update({ where: { id: req.params.startUpId }, data: { companyVision: req.body.companyVision, noOfEmployees: req.body.noOfEmployees, linkedIn: req.body.linkedIn, sector: req.body.sector, hrName: req.body.hrName, hrEmail: req.body.hrEmail, hrDesignation: req.body.hrDesignation, website: req.body.website, tracxn: req.body.tracxn, social: req.body.social, cruchbase: req.body.cruchbase, iitdStartup: req.body.iitdStartup } })
+        for (let x of req.body.founder) {
             // console.log(x)
             await prisma.founder.upsert({
                 where: {
@@ -134,7 +134,7 @@ router.put('/:startUpId', async (req, res) => {
                 },
             });
         }
-        const updatedStartUp=await prisma.startup.findUnique({where:{id:req.params.startUpId},include:{founder:true}})
+        const updatedStartUp = await prisma.startup.findUnique({ where: { id: req.params.startUpId }, include: { founder: true } })
         res.status(200).json({
             status: 200,
             startUpDetails: updatedStartUp
