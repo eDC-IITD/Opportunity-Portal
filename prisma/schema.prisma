@@ -38,6 +38,7 @@ model startup {
   hrDesignation String?
   founder       founder[]
   jobs          job[]
+  iitdStartup  Boolean @default(false)
 }
 
 model job {
