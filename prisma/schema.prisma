@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -18,7 +15,7 @@ model founder {
   linkedIn  String?
   website   String?
   startupId String
-  startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
 
   @@id([id, startupId])
 }
@@ -36,18 +33,17 @@ model startup {
   sector        String?
   noOfEmployees String?
   companyVision String?
-  founder       founder[]
-  jobs          job[]
   hrName        String?
   hrEmail       String?
   hrDesignation String?
+  founder       founder[]
+  jobs          job[]
 }
 
 model job {
   id               String               @id @unique @default(uuid())
   companyName      String?
   startupId        String
-  startup          startup              @relation(fields: [startupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   designation      String?
   type             String?
   duration         String?
@@ -62,17 +58,18 @@ model job {
   startUpId        String?
   createdAt        String?
   approval         String?
+  startup          startup              @relation(fields: [startupId], references: [id], onDelete: Cascade)
   studentsApplied  studentApplication[]
 }
 
 model studentApplication {
   id                 String  @id @unique @default(uuid())
-  student            student @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   studentId          String
   jobId              String
-  job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   status             String  @default("Applied")
   whyShouldWeHireYou String?
+  job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  student            student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([jobId, studentId])
 }
@@ -88,7 +85,8 @@ model student {
   cgpa        String?
   resumeLink  String?
   linkedIn    String?
-  isVerified  Boolean              @default(false)
+  isVerified  Boolean              @default(true)
+  resumeId    String?
   jobsApplied studentApplication[]
 }
 
