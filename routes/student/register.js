@@ -14,7 +14,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const drive = google.drive('v3');
 import fs from 'fs';
-import apikeys from './creds.json' assert { type: 'json' };
+import apikeys from '../../creds.json' assert { type: 'json' };
 
 //Get
 router.get('/', async (req, res) => {

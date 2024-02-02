@@ -1,5 +1,5 @@
 node_modules
 .env
 client
-index.zip
+creds.json
 test.js
