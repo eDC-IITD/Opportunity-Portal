@@ -119,6 +119,7 @@ router.put('/:startUpId', async (req, res) => {
                     email: x.email,
                     designation: x.designation,
                     linkedIn: x.linkedIn,
+                    bio: x.bio,
                 },
                 create: {
                     id: x.id,
@@ -126,6 +127,7 @@ router.put('/:startUpId', async (req, res) => {
                     email: x.email,
                     designation: x.designation,
                     linkedIn: x.linkedIn,
+                    bio: x.bio,
                     startup: {
                         connect: {
                             id: req.params.startUpId,
